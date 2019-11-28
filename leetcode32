@@ -1,0 +1,50 @@
+#include <iostream>
+#include <stack>
+#include <algorithm>
+using namespace std;
+
+class Solution
+{
+public:
+	int longestvalid(string s)
+	{
+		stack<int> vec;//左括号进栈
+		int res;//结果
+		int start=0;//一种可能结果的开始下标
+		for(int i=0;i<s.length();i++)
+		{
+			if(s[i]=='(')//左括号进栈
+			{
+				vec.push(i);
+			}
+			else if(s[i]==')')
+			{
+				if(vec.empty())//栈中没有左括号
+				{
+					start=i+1;
+				}
+				else//栈中有左括号
+				{
+					vec.pop();//弹出栈顶
+					if(vec.empty())//如果弹出栈顶后栈为空
+					{
+						res=max(res,i-start+1);//i-start+1是从start到i都是结果
+					}
+					else//弹出栈顶后栈不为空
+					{
+						res=max(res,i-vec.top());//不能用start是因为栈不空没有到start位置
+					}
+				}
+			}
+		}
+		return res;
+	}
+};
+int main()
+{
+	Solution a;
+	int result;
+	result=a.longestvalid("())((()))");
+
+	cout <<result<<endl;
+}
