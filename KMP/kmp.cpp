@@ -47,7 +47,7 @@ int KMP(string str,string ptr)
 	}
 	if(j==len)
 	{
-		return i-j;
+		return i-j;//返回下标
 	}
 	else
 	{
