@@ -1,0 +1,86 @@
+1.使用双指针，固定一个数，双指针指向另外两数
+2.去重
+
+
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+class Solution
+{
+public:
+	vector<vector<int>> threesum(vector <int>& nums)
+	{
+		vector<vector<int>> result;
+		int n=nums.size();
+		sort(nums.begin(),nums.end());//排序
+		if(n==0||nums[0]>0||nums[n-1]<0)
+			return {};
+		for(int i=0;i<n;i++)
+		{
+			int temp=nums[i];
+			if(temp>0)//没有<=0的数了，整个循环结束
+				break;
+			if(i>0&&nums[i]==nums[i-1])//去重,nums[i]的数之前已经作为和数了，就跳过去
+				continue;
+			int l=i+1,r=n-1;//l,r分别从两头开始
+			while(l<r)
+			{
+				if(nums[l]+nums[r]>-temp)
+				{
+					r--;
+					while(l<r&&nums[r]==nums[r+1])//去重
+					{
+						r--;
+					}
+				}
+				else if(nums[l]+nums[r]<-temp)
+				{
+					l++;
+					while(l<r&&nums[l]==nums[l-1])//去重
+					{
+						l++;
+					}
+				}
+				else
+				{
+					result.push_back(vector<int> {nums[i],nums[l],nums[r]});
+					l++;
+					r--;
+					while(l<r&&nums[l]==nums[l-1])
+					{
+						l++;
+					}
+					while(l<r&&nums[r]==nums[r+1])
+					{
+						r--;
+					}
+				}
+			}
+		}
+		return result;
+
+	}
+
+};
+int main()
+{
+	Solution a;
+	vector<vector<int>> res;
+	vector<int> arr{-1, 0, 1, 2, -1, -4};//-4,-1,-1,0,1,2
+	res=a.threesum(arr);
+	vector<vector<int>>::iterator iter;
+	for(iter=res.begin();iter!=res.end();iter++)
+	{
+		vector<int>::iterator iter1;
+		for(iter1=(*iter).begin();iter1!=(*iter).end();iter1++)
+		{
+			cout <<*iter1<<'\t';
+		}
+		cout <<endl;
+	}
+}
+
+
+
