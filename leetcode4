@@ -1,0 +1,71 @@
+时间复杂度为O(log(min(m,n)))
+首先找到边界，保证:
+nums1_left_max<nums2_right_min
+nums1_left_max<nums1_right_min
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+class Solution
+{
+public:
+	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
+	{
+		int m=nums1.size();
+		int n=nums2.size();
+		double res;
+		int i,j;
+		if(n<m)//保证m<=n
+		{
+			return findMedianSortedArrays(nums2,nums1);
+		}
+
+		int left=0;
+		int right=m;
+		int left_total=(m+n+1)/2;//边界左边个数
+		//二分法确定nums1的i
+		while(left<right)
+		{
+			i=(left+right)/2;
+			j=left_total-i;
+			if(nums1[i]<nums2[j-1])
+			{
+				left=i+1;
+			}
+			else
+			{
+				right=i;//不是i-1因为i=0时不满足
+			}
+		}
+		//确定i,j
+		i=left;
+		j=left_total-left;
+
+		//考虑边界值
+		int nums1_left_max=((i==0) ? INT_MIN : nums1[i-1]);
+		int nums1_right_min=((i==m) ? INT_MAX : nums1[i]);
+		int nums2_left_max=((j==0) ? INT_MIN : nums2[j-1]);
+		int nums2_right_min=((j==n) ? INT_MAX : nums2[j]);
+
+		if((m+n)/2==0)
+		{
+			return res=(max(nums1_left_max,nums2_left_max)+min(nums1_right_min,nums2_right_min))/2.0;
+		}
+		else
+		{
+			return res=max(nums1_left_max,nums2_left_max);
+		}
+	}
+};
+int main()
+{
+	Solution a;
+	vector<int> nums1={2,3,5,10,12};
+	vector<int> nums2={1,4,7,9};
+	double result;
+	result=a.findMedianSortedArrays(nums1,nums2);
+	cout <<result<<endl;
+}
